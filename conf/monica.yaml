@@ -1,0 +1,37 @@
+---
+default:
+  postgres:
+    default: "host=localhost port=5432 dbname=mydb sslmode=disable"
+  runmode: dev
+server:
+    serverport: 8202
+    servermode: http
+
+
+log:
+  handlers:
+    - name: yamlfileHandler
+      type: FileHandler
+      args:
+        baseFileName: "log/log_file.log"
+        formatter: "{{.Time.String }} {{.FuncName }} {{.LineNo}} {{ .Message }} \n"
+  loggers:
+    - name: /
+      handlers:
+        - yamlfileHandler
+      level: debug
+      propagte: false
+
+session:
+  redisprovider:
+    address: "10.0.0.206:6395"
+    db: 13
+
+thriftpool:
+  orderserver:
+    hosts:
+      - "10.0.0.206:8220"
+    framed: true
+    max_idle: 20
+    max_retry: 2
+    with_common_header: false
